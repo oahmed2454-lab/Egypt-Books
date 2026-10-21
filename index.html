@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>كتب مصرية - المكتبة الذكية</title>
+    <title>كتب مصرية - المكتبة الشاملة والذكية</title>
     
     <!-- كود إعلانات Monetag Service Worker -->
     <script>
@@ -44,7 +44,7 @@
             font-size: 16px;
         }
         .filter-section {
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             display: flex;
             justify-content: center;
             gap: 15px;
@@ -61,6 +61,29 @@
             font-weight: bold;
             font-family: inherit;
             cursor: pointer;
+        }
+        /* أزرار مسارات تانية ثانوي */
+        .paths-container {
+            display: none;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+        }
+        .path-btn {
+            background-color: #ade8f4;
+            color: #03045e;
+            border: 2px solid #0077b6;
+            padding: 10px 18px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+        .path-btn:hover, .path-btn.active {
+            background-color: #0077b6;
+            color: white;
         }
         .container {
             display: flex;
@@ -125,20 +148,29 @@
 <body>
 
     <header>
-        <h1>📚 كتب مصرية - المكتبة الذكية</h1>
-        <p>المناهج المصرية الحديثة ومسارات البكالوريا بروابط تحميل مباشر</p>
+        <h1>📚 كتب مصرية - المكتبة الذكية الشاملة</h1>
+        <p>جميع أنواع الكتب والمناهج ومسارات البكالوريا الحديثة بروابط تحميل مباشر</p>
     </header>
 
     <div class="filter-section">
-        <select id="stageFilter" onchange="filterBooks()">
+        <select id="stageFilter" onchange="handleStageChange()">
             <option value="all">عرض كل المراحل الدراسية</option>
             <option value="prep1">الصف الأول الإعدادي</option>
             <option value="prep2">الصف الثاني الإعدادي</option>
             <option value="prep3">الصف الثالث الإعدادي</option>
             <option value="sec1">الصف الأول الثانوي</option>
-            <option value="sec2">الصف الثاني الثانوي (البكالوريا والمسارات)</option>
+            <option value="sec2">الصف الثاني الثانوي (نظام المسارات الحديث)</option>
             <option value="sec3">الصف الثالث الثانوي</option>
         </select>
+    </div>
+
+    <!-- مسارات الصف الثاني الثانوي -->
+    <div class="paths-container" id="sec2Paths">
+        <button class="path-btn active" onclick="filterSec2Path('all')">كل مسارات تانية ثانوي</button>
+        <button class="path-btn" onclick="filterSec2Path('eng')">مسار الهندسة وعلوم الحاسب</button>
+        <button class="path-btn" onclick="filterSec2Path('health')">مسار علوم الصحة والحياة</button>
+        <button class="path-btn" onclick="filterSec2Path('business')">مسار الأعمال والذكاء الاصطناعي</button>
+        <button class="path-btn" onclick="filterSec2Path('arts')">مسار الآداب والعلوم الإنسانية</button>
     </div>
 
     <div class="container" id="booksList">
@@ -151,39 +183,93 @@
 
     <script>
         const allBooks = [
-            // الإعدادية
-            { title: "كتاب اللغة العربية", stage: "prep1", pathName: "الصف الأول الإعدادي - عام", url: "#" },
-            { title: "كتاب العلوم", stage: "prep1", pathName: "الصف الأول الإعدادي - عام", url: "#" },
-            { title: "كتاب الرياضيات", stage: "prep1", pathName: "الصف الأول الإعدادي - عام", url: "#" },
+            // ================= صـف أول إعدادي (كل أنواع الكتب) =================
+            { title: "كتاب اللغة العربية (الشرح الأساسي)", stage: "prep1", path: "عام", pathName: "الصف الأول الإعدادي", url: "#" },
+            { title: "كتاب اللغة العربية (الأنشطة والتدريبات)", stage: "prep1", path: "عام", pathName: "الصف الأول الإعدادي", url: "#" },
+            { title: "كتاب اللغة العربية (النصوص والإملاء)", stage: "prep1", path: "عام", pathName: "الصف الأول الإعدادي", url: "#" },
+            { title: "كتاب العلوم (الشرح المدرسي)", stage: "prep1", path: "عام", pathName: "الصف الأول الإعدادي", url: "#" },
+            { title: "كتاب العلوم (كتاب التدريبات العملي)", stage: "prep1", path: "عام", pathName: "الصف الأول الإعدادي", url: "#" },
+            { title: "كتاب الرياضيات (الجبر والعين)", stage: "prep1", path: "عام", pathName: "الصف الأول الإعدادي", url: "#" },
+            { title: "كتاب الرياضيات (الهندسة والقياس)", stage: "prep1", path: "عام", pathName: "الصف الأول الإعدادي", url: "#" },
+            { title: "كتاب الدراسات الاجتماعية (جغرافيا وتاريخ)", stage: "prep1", path: "عام", pathName: "الصف الأول الإعدادي", url: "#" },
+            { title: "كتاب اللغة الإنجليزية (Student's Book)", stage: "prep1", path: "عام", pathName: "الصف الأول الإعدادي", url: "#" },
+            { title: "كتاب اللغة الإنجليزية (Workbook)", stage: "prep1", path: "عام", pathName: "الصف الأول الإعدادي", url: "#" },
 
-            { title: "كتاب اللغة العربية", stage: "prep2", pathName: "الصف الثاني الإعدادي - عام", url: "#" },
-            { title: "كتاب العلوم", stage: "prep2", pathName: "الصف الثاني الإعدادي - عام", url: "#" },
+            // ================= صـف تاني إعدادي (كل أنواع الكتب) =================
+            { title: "كتاب اللغة العربية (الشرح والقرآن)", stage: "prep2", path: "عام", pathName: "الصف الثاني الإعدادي", url: "#" },
+            { title: "كتاب اللغة العربية (الأنشطة والتدريبات)", stage: "prep2", path: "عام", pathName: "الصف الثاني الإعدادي", url: "#" },
+            { title: "كتاب العلوم (الكتاب المدرسي الكامل)", stage: "prep2", path: "عام", pathName: "الصف الثاني الإعدادي", url: "#" },
+            { title: "كتاب العلوم (كتاب التجريب والأنشطة)", stage: "prep2", path: "عام", pathName: "الصف الثاني الإعدادي", url: "#" },
+            { title: "كتاب الرياضيات (الجبر والإحصاء)", stage: "prep2", path: "عام", pathName: "الصف الثاني الإعدادي", url: "#" },
+            { title: "كتاب الرياضيات (الهندسة التحليلية)", stage: "prep2", path: "عام", pathName: "الصف الثاني الإعدادي", url: "#" },
+            { title: "كتاب الدراسات الاجتماعية", stage: "prep2", path: "عام", pathName: "الصف الثاني الإعدادي", url: "#" },
+            { title: "كتاب اللغة الإنجليزية (Student's Book)", stage: "prep2", path: "عام", pathName: "الصف الثاني الإعدادي", url: "#" },
+            { title: "كتاب اللغة الإنجليزية (Workbook)", stage: "prep2", path: "عام", pathName: "الصف الثاني الإعدادي", url: "#" },
 
-            { title: "كتاب اللغة العربية", stage: "prep3", pathName: "الصف الثالث الإعدادي - عام", url: "#" },
-            { title: "كتاب الرياضيات", stage: "prep3", pathName: "الصف الثالث الإعدادي - عام", url: "#" },
+            // ================= صـف تالت إعدادي (كل أنواع الكتب) =================
+            { title: "كتاب اللغة العربية (الشرح والقواعد)", stage: "prep3", path: "عام", pathName: "الصف الثالث الإعدادي", url: "#" },
+            { title: "كتاب اللغة العربية (التدريبات والامتحانات)", stage: "prep3", path: "عام", pathName: "الصف الثالث الإعدادي", url: "#" },
+            { title: "كتاب العلوم (الفصل الدراسي الأول والثاني)", stage: "prep3", path: "عام", pathName: "الصف الثالث الإعدادي", url: "#" },
+            { title: "كتاب الرياضيات (الجبر وحساب المثلثات)", stage: "prep3", path: "عام", pathName: "الصف الثالث الإعدادي", url: "#" },
+            { title: "كتاب الرياضيات (الهندسة)", stage: "prep3", path: "عام", pathName: "الصف الثالث الإعدادي", url: "#" },
+            { title: "كتاب الدراسات الاجتماعية", stage: "prep3", path: "عام", pathName: "الصف الثالث الإعدادي", url: "#" },
+            { title: "كتاب اللغة الإنجليزية الأساسي", stage: "prep3", path: "عام", pathName: "الصف الثالث الإعدادي", url: "#" },
+            { title: "كتاب اللغة الإنجليزية (تدريبات المهارات)", stage: "prep3", path: "عام", pathName: "الصف الثالث الإعدادي", url: "#" },
 
-            // الثانوية العامة
-            { title: "كتاب الرياضيات المدمجة", stage: "sec1", pathName: "الصف الأول الثانوي", url: "#" },
-            { title: "كتاب العلوم المتكاملة", stage: "sec1", pathName: "الصف الأول الثانوي", url: "#" },
+            // ================= صـف أول ثانوي (كل أنواع الكتب) =================
+            { title: "كتاب اللغة العربية (النصوص والبلاغة)", stage: "sec1", path: "عام", pathName: "الصف الأول الثانوي", url: "#" },
+            { title: "كتاب اللغة العربية (الأدب والنحو)", stage: "sec1", path: "عام", pathName: "الصف الأول الثانوي", url: "#" },
+            { title: "كتاب الرياضيات المدمجة (جبر وهندسة وحساب مثلثات)", stage: "sec1", path: "عام", pathName: "الصف الأول الثانوي", url: "#" },
+            { title: "كتاب العلوم المتكاملة (الكتاب المدرسي)", stage: "sec1", path: "عام", pathName: "الصف الأول الثانوي", url: "#" },
+            { title: "كتاب العلوم المتكاملة (كتاب الأنشطة)", stage: "sec1", path: "عام", pathName: "الصف الأول الثانوي", url: "#" },
+            { title: "كتاب التاريخ والجمال", stage: "sec1", path: "عام", pathName: "الصف الأول الثانوي", url: "#" },
+            { title: "كتاب الفلسفة والمنطق", stage: "sec1", path: "عام", pathName: "الصف الأول الثانوي", url: "#" },
+            { title: "كتاب اللغة الإنجليزية (Course Book)", stage: "sec1", path: "عام", pathName: "الصف الأول الثانوي", url: "#" },
 
-            // تانية ثانوي - مسارات البكالوريا الحديثة
-            { title: "كتاب الرياضيات البحتة والتطبيقية", stage: "sec2", pathName: "مسار قطاع الهندسة والعلوم (تخصص علمي)", url: "#" },
-            { title: "كتاب الفيزياء المتقدمة", stage: "sec2", pathName: "مسار قطاع الهندسة والعلوم (تخصص علمي)", url: "#" },
-            { title: "كتاب الكيمياء العضوية والعامة", stage: "sec2", pathName: "مسار قطاع الهندسة والعلوم (تخصص علمي)", url: "#" },
-            
-            { title: "كتاب الأحياء والعلوم البيولوجية", stage: "sec2", pathName: "مسار قطاع علوم الصحة والحياة (طب وعلوم)", url: "#" },
-            { title: "كتاب الكيمياء التحليلية والحيوية", stage: "sec2", pathName: "مسار قطاع علوم الصحة والحياة (طب وعلوم)", url: "#" },
-            
-            { title: "كتاب الرياضيات للاقتصاد والأعمال", stage: "sec2", pathName: "مسار قطاع الأعمال والذكاء الاصطناعي", url: "#" },
-            { title: "كتاب البرمجة وتكنولوجيا المعلومات", stage: "sec2", pathName: "مسار قطاع الأعمال والذكاء الاصطناعي", url: "#" },
-            
-            { title: "كتاب الدراسات الإنسانية والفلسفة", stage: "sec2", pathName: "مسار قطاع الآداب والعلوم الإنسانية", url: "#" },
-            { title: "كتاب التاريخ الحديث والمعاصر", stage: "sec2", pathName: "مسار قطاع الآداب والعلوم الإنسانية", url: "#" },
+            // ================= صـف ثاني ثانوي (المسارات الحديثة والبكالوريا) =================
+            // مسار الهندسة وعلوم الحاسب
+            { title: "كتاب اللغة العربية (المسار العلمي والهندسي)", stage: "sec2", path: "eng", pathName: "مسار الهندسة وعلوم الحاسب", url: "#" },
+            { title: "كتاب الرياضيات البحتة (جبر وتفاضل وحساب مثلثات)", stage: "sec2", path: "eng", pathName: "مسار الهندسة وعلوم الحاسب", url: "#" },
+            { title: "كتاب الرياضيات التطبيقية (استاتيكا وميكانيكا)", stage: "sec2", path: "eng", pathName: "مسار الهندسة وعلوم الحاسب", url: "#" },
+            { title: "كتاب الفيزياء المتقدمة (الشرح الأساسي)", stage: "sec2", path: "eng", pathName: "مسار الهندسة وعلوم الحاسب", url: "#" },
+            { title: "كتاب الفيزياء (كتاب التجارب والعملي)", stage: "sec2", path: "eng", pathName: "مسار الهندسة وعلوم الحاسب", url: "#" },
+            { title: "كتاب الكيمياء العامة وعضوية", stage: "sec2", path: "eng", pathName: "مسار الهندسة وعلوم الحاسب", url: "#" },
+            { title: "كتاب أساسيات البرمجة وعلوم الحاسب", stage: "sec2", path: "eng", pathName: "مسار الهندسة وعلوم الحاسب", url: "#" },
 
-            // تالتة ثانوي
-            { title: "كتاب الفيزياء العامة للثانوية العامة", stage: "sec3", pathName: "الصف الثالث الثانوي", url: "#" },
-            { title: "كتاب الكيمياء العامة", stage: "sec3", pathName: "الصف الثالث الثانوي", url: "#" }
+            // مسار علوم الصحة والحياة (طب وعلوم)
+            { title: "كتاب اللغة العربية (مسار الصحة والحياة)", stage: "sec2", path: "health", pathName: "مسار علوم الصحة والحياة", url: "#" },
+            { title: "كتاب الأحياء والعلوم البيولوجية (الشرح)", stage: "sec2", path: "health", pathName: "مسار علوم الصحة والحياة", url: "#" },
+            { title: "كتاب الأحياء (الأنشطة والرسوم البيولوجية)", stage: "sec2", path: "health", pathName: "مسار علوم الصحة والحياة", url: "#" },
+            { title: "كتاب الكيمياء التحليلية والحيوية", stage: "sec2", path: "health", pathName: "مسار علوم الصحة والحياة", url: "#" },
+            { title: "كتاب الفيزياء الطبية والحيوية", stage: "sec2", path: "health", pathName: "مسار علوم الصحة والحياة", url: "#" },
+
+            // مسار الأعمال والذكاء الاصطناعي
+            { title: "كتاب اللغة العربية (مسار الأعمال)", stage: "sec2", path: "business", pathName: "مسار الأعمال والذكاء الاصطناعي", url: "#" },
+            { title: "كتاب الرياضيات للاقتصاد والأعمال", stage: "sec2", path: "business", pathName: "مسار الأعمال والذكاء الاصطناعي", url: "#" },
+            { title: "كتاب الاقتصاد والاحصاء التطبيقي", stage: "sec2", pathName: "مسار الأعمال والذكاء الاصطناعي", url: "#" },
+            { title: "كتاب تكنولوجيا المعلومات وإدارة البيانات", stage: "sec2", pathName: "مسار الأعمال والذكاء الاصطناعي", url: "#" },
+
+            // مسار الآداب والعلوم الإنسانية
+            { title: "كتاب اللغة العربية (الموسع للأدب والنصوص)", stage: "sec2", path: "arts", pathName: "مسار الآداب والعلوم الإنسانية", url: "#" },
+            { title: "كتاب التاريخ الحديث والمعاصر", stage: "sec2", path: "arts", pathName: "مسار الآداب والعلوم الإنسانية", url: "#" },
+            { title: "كتاب الجغرافيا البشرية والاقتصادية", stage: "sec2", pathName: "مسار الآداب والعلوم الإنسانية", url: "#" },
+            { title: "كتاب الفلسفة وعلم النفس", stage: "sec2", pathName: "مسار الآداب والعلوم الإنسانية", url: "#" },
+            { title: "كتاب اللغة الإنجليزية المتقدمة للأدبي", stage: "sec2", pathName: "مسار الآداب والعلوم الإنسانية", url: "#" },
+
+            // ================= صـف تالت ثانوي (كل أنواع الكتب) =================
+            { title: "كتاب اللغة العربية (البلاغة والنصوص العامة للثانوية)", stage: "sec3", path: "عام", pathName: "الصف الثالث الثانوي", url: "#" },
+            { title: "كتاب اللغة العربية (النحو والمراجعة النهائية)", stage: "sec3", path: "عام", pathName: "الصف الثالث الثانوي", url: "#" },
+            { title: "كتاب الفيزياء العامة (الشرح والمسائل)", stage: "sec3", path: "عام", pathName: "الصف الثالث الثانوي", url: "#" },
+            { title: "كتاب الفيزياء (كتاب التجربة والامتحانات السابقة)", stage: "sec3", path: "عام", pathName: "الصف الثالث الثانوي", url: "#" },
+            { title: "كتاب الكيمياء العضوية وغير العضوية", stage: "sec3", path: "عام", pathName: "الصف الثالث الثانوي", url: "#" },
+            { title: "كتاب الأحياء والجيولوجيا والعلوم البيئية", stage: "sec3", path: "عام", pathName: "الصف الثالث الثانوي", url: "#" },
+            { title: "كتاب الرياضيات البحتة (تفاضل وتكامل وجبر)", stage: "sec3", path: "عام", pathName: "الصف الثالث الثانوي", url: "#" },
+            { title: "كتاب الرياضيات التطبيقية (استاتيكا وديناميكا)", stage: "sec3", path: "عام", pathName: "الصف الثالث الثانوي", url: "#" },
+            { title: "كتاب اللغة الإنجليزية (Final Revision & Course Book)", stage: "sec3", path: "عام", pathName: "الصف الثالث الثانوي", url: "#" }
         ];
+
+        let currentStage = 'all';
+        let currentSec2Path = 'all';
 
         function displayBooks(books) {
             const container = document.getElementById('booksList');
@@ -208,16 +294,43 @@
             });
         }
 
-        function filterBooks() {
-            const selectedStage = document.getElementById('stageFilter').value;
-            if (selectedStage === 'all') {
-                displayBooks(allBooks);
+        function handleStageChange() {
+            currentStage = document.getElementById('stageFilter').value;
+            const pathsContainer = document.getElementById('sec2Paths');
+
+            // إظهار أزرار المسارات فقط لو اختار الصف الثاني الثانوي
+            if (currentStage === 'sec2') {
+                pathsContainer.style.display = 'flex';
+                filterSec2Path('all');
             } else {
-                const filtered = allBooks.filter(b => b.stage === selectedStage);
+                pathsContainer.style.display = 'none';
+                if (currentStage === 'all') {
+                    displayBooks(allBooks);
+                } else {
+                    const filtered = allBooks.filter(b => b.stage === currentStage);
+                    displayBooks(filtered);
+                }
+            }
+        }
+
+        function filterSec2Path(pathKey) {
+            currentSec2Path = pathKey;
+            
+            // تحديث تصميم الأزرار النشطة
+            const buttons = document.querySelectorAll('.path-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event && event.target.classList.add('active');
+
+            const sec2Books = allBooks.filter(b => b.stage === 'sec2');
+            if (pathKey === 'all') {
+                displayBooks(sec2Books);
+            } else {
+                const filtered = sec2Books.filter(b => b.path === pathKey);
                 displayBooks(filtered);
             }
         }
 
+        // العرض التلقائي الأولي لكل الكتب
         displayBooks(allBooks);
     </script>
 </body>
