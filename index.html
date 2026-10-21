@@ -3,136 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>المكتبة المدرسية الإلكترونية - الكتب والمناهج المصرية</title>
+    <title>كتب مصرية - المكتبة الإلكترونية الشاملة</title>
     
-    <!-- كود تفعيل وتوصيل إعلانات Monetag Service Worker -->
+    <!-- كود إعلانات Monetag Service Worker -->
     <script>
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/Egypt-Books/sw.js')
             .then(function(reg) {
-                console.log('Monetag Service Worker Registered Successfully!', reg);
+                console.log('Monetag Service Worker Active!', reg);
             }).catch(function(err) {
-                console.log('Service Worker Registration Failed: ', err);
+                console.log('Service Worker Failed: ', err);
             });
         }
     </script>
-    
+
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
         body {
-            background-color: #f4f7f6;
+            font-family: 'Cairo', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f9;
             color: #333;
-            line-height: 1.6;
-            padding: 20px;
-        }
-
-        header {
             text-align: center;
+            padding: 20px;
+            margin: 0;
+        }
+        header {
             background: linear-gradient(135deg, #1e3c72, #2a5298);
             color: white;
             padding: 30px 20px;
-            border-radius: 12px;
+            border-radius: 10px;
             margin-bottom: 25px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
         }
-
         header h1 {
-            font-size: 2.2rem;
-            margin-bottom: 10px;
+            margin: 0 0 10px 0;
+            font-size: 28px;
         }
-
         header p {
-            font-size: 1.1rem;
+            margin: 0;
             opacity: 0.9;
         }
-
-        .controls {
+        .filter-section {
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        select {
+            padding: 10px 15px;
+            font-size: 16px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            outline: none;
+            background-color: white;
+            font-family: inherit;
+        }
+        .container {
             display: flex;
             flex-wrap: wrap;
-            gap: 15px;
             justify-content: center;
-            margin-bottom: 30px;
-        }
-
-        select, input {
-            padding: 12px 18px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 1rem;
-            outline: none;
-            transition: border-color 0.3s;
-        }
-
-        select:focus, input:focus {
-            border-color: #2a5298;
-        }
-
-        input {
-            width: 100%;
-            max-width: 350px;
-        }
-
-        .books-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 20px;
             max-width: 1200px;
             margin: 0 auto;
         }
-
         .book-card {
             background: white;
-            border-radius: 10px;
             padding: 20px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            width: 260px;
+            text-align: right;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: transform 0.2s;
         }
-
         .book-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            transform: translateY(-4px);
         }
-
-        .book-title {
-            font-size: 1.2rem;
-            font-weight: bold;
+        .book-card h3 {
+            margin-top: 0;
             color: #1e3c72;
-            margin-bottom: 10px;
+            font-size: 18px;
         }
-
-        .book-info {
-            font-size: 0.9rem;
+        .book-card p {
+            font-size: 14px;
             color: #666;
-            margin-bottom: 15px;
+            margin: 5px 0 15px 0;
         }
-
         .download-btn {
             display: block;
-            text-align: center;
-            background-color: #27ae60;
+            background: #27ae60;
             color: white;
             text-decoration: none;
             padding: 10px;
-            border-radius: 6px;
-            font-weight: bold;
-            transition: background-color 0.3s;
-        }
-
-        .download-btn:hover {
-            background-color: #219150;
-        }
-
-        footer {
+            border-radius: 5px;
             text-align: center;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+        .download-btn:hover {
+            background: #219653;
+        }
+        footer {
             margin-top: 40px;
             padding: 20px;
             color: #777;
@@ -143,74 +116,103 @@
 <body>
 
     <header>
-        <h1>📚 كتب مصرية - المكتبة المدرسية الإلكترونية</h1>
-        <p>جميع المناهج والكتب الدراسية بروابط مباشرة مجاناً</p>
+        <h1>📚 كتب مصرية - المكتبة الإلكترونية الشاملة</h1>
+        <p>جميع المناهج والكتب الدراسية من الصف الأول الإعدادي حتى الثالث الثانوي</p>
     </header>
 
-    <div class="controls">
-        <select id="gradeFilter">
-            <option value="all">جميع المراحل الدراسية</option>
-            <option value="sec2">الصف الثاني الثانوي</option>
-            <option value="sec1">الصف الأول الثانوي</option>
+    <div class="filter-section">
+        <select id="stageFilter" onchange="filterBooks()">
+            <option value="all">كل المراحل والصفوف</option>
+            <option value="prep1">الصف الأول الإعدادي</option>
+            <option value="prep2">الصف الثاني الإعدادي</option>
             <option value="prep3">الصف الثالث الإعدادي</option>
+            <option value="sec1">الصف الأول الثانوي</option>
+            <option value="sec2">الصف الثاني الثانوي</option>
+            <option value="sec3">الصف الثالث الثانوي</option>
         </select>
-
-        <input type="text" id="searchInput" placeholder="ابحث عن اسم المادة أو الكتاب...">
     </div>
 
-    <div class="books-grid" id="booksContainer"></div>
+    <div class="container" id="booksList">
+        <!-- الكتب ستعرض هنا تلقائياً -->
+    </div>
 
     <footer>
         <p>جميع الحقوق محفوظة © كتب مصرية 2026</p>
     </footer>
 
     <script>
-        const books = [
-            { title: "كتاب اللغة العربية", grade: "sec2", subject: "عربي", link: "#" },
-            { title: "كتاب الرياضيات (المحاضرات)", grade: "sec2", subject: "رياضيات", link: "#" },
-            { title: "كتاب الفيزياء - الصف الثاني الثانوي", grade: "sec2", subject: "فيزياء", link: "#" },
-            { title: "كتاب الكيمياء - الصف الثاني الثانوي", grade: "sec2", subject: "كيمياء", link: "#" },
-            { title: "كتاب الأحياء - الصف الثاني الثانوي", grade: "sec2", subject: "أحياء", link: "#" },
-            { title: "كتاب اللغة الإنجليزية (English)", grade: "sec2", subject: "إنجليزي", link: "#" }
+        const allBooks = [
+            // الإعدادية
+            { title: "كتاب اللغة العربية", stage: "prep1", stageName: "الصف الأول الإعدادي", url: "https://moe.gov.eg" },
+            { title: "كتاب العلوم", stage: "prep1", stageName: "الصف الأول الإعدادي", url: "https://moe.gov.eg" },
+            { title: "كتاب الرياضيات", stage: "prep1", stageName: "الصف الأول الإعدادي", url: "https://moe.gov.eg" },
+            { title: "كتاب الدراسات الاجتماعية", stage: "prep1", stageName: "الصف الأول الإعدادي", url: "https://moe.gov.eg" },
+            { title: "كتاب اللغة الإنجليزية", stage: "prep1", stageName: "الصف الأول الإعدادي", url: "https://moe.gov.eg" },
+
+            { title: "كتاب اللغة العربية", stage: "prep2", stageName: "الصف الثاني الإعدادي", url: "https://moe.gov.eg" },
+            { title: "كتاب العلوم", stage: "prep2", stageName: "الصف الثاني الإعدادي", url: "https://moe.gov.eg" },
+            { title: "كتاب الرياضيات", stage: "prep2", stageName: "الصف الثاني الإعدادي", url: "https://moe.gov.eg" },
+            { title: "كتاب الدراسات الاجتماعية", stage: "prep2", stageName: "الصف الثاني الإعدادي", url: "https://moe.gov.eg" },
+            { title: "كتاب اللغة الإنجليزية", stage: "prep2", stageName: "الصف الثاني الإعدادي", url: "https://moe.gov.eg" },
+
+            { title: "كتاب اللغة العربية", stage: "prep3", stageName: "الصف الثالث الإعدادي", url: "https://moe.gov.eg" },
+            { title: "كتاب العلوم", stage: "prep3", stageName: "الصف الثالث الإعدادي", url: "https://moe.gov.eg" },
+            { title: "كتاب الرياضيات", stage: "prep3", stageName: "الصف الثالث الإعدادي", url: "https://moe.gov.eg" },
+            { title: "كتاب الدراسات الاجتماعية", stage: "prep3", stageName: "الصف الثالث الإعدادي", url: "https://moe.gov.eg" },
+            { title: "كتاب اللغة الإنجليزية", stage: "prep3", stageName: "الصف الثالث الإعدادي", url: "https://moe.gov.eg" },
+
+            // الثانوية
+            { title: "كتاب اللغة العربية", stage: "sec1", stageName: "الصف الأول الثانوي", url: "https://moe.gov.eg" },
+            { title: "كتاب الرياضيات المدمجة", stage: "sec1", stageName: "الصف الأول الثانوي", url: "https://moe.gov.eg" },
+            { title: "كتاب العلوم المتكاملة", stage: "sec1", stageName: "الصف الأول الثانوي", url: "https://moe.gov.eg" },
+            { title: "كتاب التاريخ والجمال", stage: "sec1", stageName: "الصف الأول الثانوي", url: "https://moe.gov.eg" },
+            { title: "كتاب اللغة الإنجليزية", stage: "sec1", stageName: "الصف الأول الثانوي", url: "https://moe.gov.eg" },
+
+            { title: "كتاب اللغة العربية", stage: "sec2", stageName: "الصف الثاني الثانوي", url: "https://moe.gov.eg" },
+            { title: "كتاب الرياضيات التطبيقية", stage: "sec2", stageName: "الصف الثاني الثانوي", url: "https://moe.gov.eg" },
+            { title: "كتاب الفيزياء", stage: "sec2", stageName: "الصف الثاني الثانوي", url: "https://moe.gov.eg" },
+            { title: "كتاب الكيمياء", stage: "sec2", stageName: "الصف الثاني الثانوي", url: "https://moe.gov.eg" },
+            { title: "كتاب الأحياء", stage: "sec2", stageName: "الصف الثاني الثانوي", url: "https://moe.gov.eg" },
+            { title: "كتاب اللغة الإنجليزية", stage: "sec2", stageName: "الصف الثاني الثانوي", url: "https://moe.gov.eg" },
+
+            { title: "كتاب اللغة العربية", stage: "sec3", stageName: "الصف الثالث الثانوي", url: "https://moe.gov.eg" },
+            { title: "كتاب الفيزياء للثانوية العامة", stage: "sec3", stageName: "الصف الثالث الثانوي", url: "https://moe.gov.eg" },
+            { title: "كتاب الكيمياء للثانوية العامة", stage: "sec3", stageName: "الصف الثالث الثانوي", url: "https://moe.gov.eg" },
+            { title: "كتاب الأحياء والجيولوجيا", stage: "sec3", stageName: "الصف الثالث الثانوي", url: "https://moe.gov.eg" },
+            { title: "كتاب الرياضيات البحتة", stage: "sec3", stageName: "الصف الثالث الثانوي", url: "https://moe.gov.eg" },
+            { title: "كتاب اللغة الإنجليزية", stage: "sec3", stageName: "الصف الثالث الثانوي", url: "https://moe.gov.eg" }
         ];
 
-        const container = document.getElementById('booksContainer');
-        const gradeFilter = document.getElementById('gradeFilter');
-        const searchInput = document.getElementById('searchInput');
-
-        function renderBooks() {
-            const selectedGrade = gradeFilter.value;
-            const searchText = searchInput.value.toLowerCase();
+        function displayBooks(books) {
+            const container = document.getElementById('booksList');
             container.innerHTML = '';
-
-            const filteredBooks = books.filter(book => {
-                const matchesGrade = selectedGrade === 'all' || book.grade === selectedGrade;
-                const matchesSearch = book.title.toLowerCase().includes(searchText) || book.subject.toLowerCase().includes(searchText);
-                return matchesGrade && matchesSearch;
-            });
-
-            if (filteredBooks.length === 0) {
-                container.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #888;">لا توجد كتب تطابق البحث.</p>';
-                return;
-            }
-
-            filteredBooks.forEach(book => {
+            
+            books.forEach(book => {
                 const card = document.createElement('div');
                 card.className = 'book-card';
                 card.innerHTML = `
                     <div>
-                        <div class="book-title">${book.title}</div>
-                        <div class="book-info">المادة: ${book.subject}</div>
+                        <h3>${book.title}</h3>
+                        <p>${book.stageName}</p>
                     </div>
-                    <a href="${book.link}" class="download-btn" target="_blank">تحميل الكتاب (PDF)</a>
+                    <a href="${book.url}" class="download-btn" target="_blank">تحميل PDF</a>
                 `;
                 container.appendChild(card);
             });
         }
 
-        gradeFilter.addEventListener('change', renderBooks);
-        searchInput.addEventListener('input', renderBooks);
-        renderBooks();
+        function filterBooks() {
+            const selectedStage = document.getElementById('stageFilter').value;
+            if (selectedStage === 'all') {
+                displayBooks(allBooks);
+            } else {
+                const filtered = allBooks.filter(b => b.stage === selectedStage);
+                displayBooks(filtered);
+            }
+        }
+
+        // تشغيل العرض الأولي
+        displayBooks(allBooks);
     </script>
 </body>
 </html>
